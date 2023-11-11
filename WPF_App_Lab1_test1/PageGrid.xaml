@@ -19,8 +19,7 @@ Executed="CutCommandBinding_Executed"/>
 Executed="SearchCommandBinding_Executed"/>
         <CommandBinding Command="Save"
 Executed="SaveCommandBinding_Executed"/>
-        <CommandBinding Command="Delete"
-Executed="DeleteCommandBinding_Executed"/>
+        <CommandBinding Command="Delete" Executed="DeleteCommandBinding_Executed"/>
     </Page.CommandBindings>
 
     <StackPanel>
@@ -94,7 +93,7 @@ Executed="DeleteCommandBinding_Executed"/>
             <Button Name ="Search" ToolTip="Найти" HorizontalAlignment="Left" VerticalAlignment="Top" Command="Search">
                 <Image Source="Images/Search.png" Height="76" Width="77" />
             </Button>
-            <Button Name ="Delete" ToolTip="Удалить" HorizontalAlignment="Left" VerticalAlignment="Top" Command="Delete">
+            <Button Name="Delete" ToolTip="Удалить" HorizontalAlignment="Left" VerticalAlignment="Top" Command="Delete"  Click="Button_Click">
                 <Image Source="Images/Delete.png" Height="78" Width="99" />
             </Button>
         </ToolBar>
