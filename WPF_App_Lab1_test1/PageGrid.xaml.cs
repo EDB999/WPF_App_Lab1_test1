@@ -21,33 +21,28 @@ namespace WPF_App_Lab1_test1
     /// </summary>
     public partial class PageGrid : Page
     {
-        private readonly List<Order> _orders;
-        private readonly IList<string> headers = new List<string>(){"Номер заказа","Цена заказа","Время заказа","Дата заказа","Номер клиента","Номер водителя"};
+        private readonly TaxiContext context;
+        //private readonly List<Order> _orders;
+        private readonly IList<string> headers = new List<string>() { "Номер заказа", "Цена заказа", "Время заказа", "Дата заказа", "Номер клиента", "Номер водителя" };
         public PageGrid()
         {
             InitializeComponent();
             this.grid.Items.Clear();
 
-            using (var dbcontext = new TaxiContext())
-                this._orders = dbcontext.Orders.ToList();
-            
-            this.grid.ItemsSource = _orders;
+            this.context = new TaxiContext();
+
+            this.grid.ItemsSource = context.Orders.ToList();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void Window_Loaded(object sender, RoutedEventArgs e) => ResetHeaders();
+
+        private void ResetHeaders()
         {
-            ResetHeaders();
-            
-            for(int i = 6; i <  grid.Columns.Count; i++) 
+            for (int i = 0; i < grid.Columns.Count; i++)
             {
-                grid.Columns[i].Header = "";
-            }
-                
-        }
-
-        private void ResetHeaders(){
-            for (int i = 0; i < headers.Count(); i++){
-                this.grid.Columns[i].Header = headers[i];
+                if (headers.Count > i)
+                    this.grid.Columns[i].Header = headers[i];
+                else grid.Columns[i].Header = "";
             }
         }
 
@@ -58,31 +53,19 @@ namespace WPF_App_Lab1_test1
                 this.grid.ItemsSource = dbcontext.Orders.ToList();
 
                 ResetHeaders();
-                // try {
-                //     var product = (Order)this.grid.CurrentCell.Item;
-                //     var old_product = dbcontext.Orders.Where(i => i.IdOrder == product.IdOrder).FirstOrDefault();
-                    
-                //     var old_grid = this.grid.Items[this.grid.SelectedIndex];
-
-                // }
-                // catch(Exception ex){
-                //     MessageBox.Show("Ошибка","Выбранного элемента не существует");
-                // }
             }
         }
 
         private void NewCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            using (var dbcontext = new TaxiContext())
-            { 
-                dbcontext.Orders.Add((Order)this.grid.CurrentCell.Item);
-                
-            }
+            context.Orders.Add((Order)this.grid.CurrentCell.Item);
         }
 
         private void CutCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            var item = (Order)this.grid.SelectedItem;
 
+            context.Orders.Update(item);
         }
 
         private void SearchCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
@@ -92,26 +75,17 @@ namespace WPF_App_Lab1_test1
 
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            using (var dbcontext = new TaxiContext())
-            {
-                dbcontext.Orders.ToList();
-                var a = 5;
-                dbcontext.SaveChanges();
-            }
+            context.SaveChanges();
         }
 
         private void DeleteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
-            
+
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            using (var dbcontext = new TaxiContext())
-            {
-                dbcontext.Orders.Remove((Order)this.grid.CurrentItem);
-                //dbcontext.SaveChanges();
-            }
+            context.Orders.Remove((Order)this.grid.CurrentItem);
         }
     }
 }
