@@ -22,43 +22,31 @@ namespace WPF_App_Lab1_test1
     public partial class PageGrid : Page
     {
         private readonly List<Order> _orders;
-        private readonly IList<string> headers = new List<string>(){"Номер заказа","Цена заказа","Время заказа","Дата заказа","Номер клиента","Номер водителя", "Номер водителя", "Номер водителя", "Номер водителя" };
+        private readonly IList<string> headers = new List<string>(){"Номер заказа","Цена заказа","Время заказа","Дата заказа","Номер клиента","Номер водителя"};
         public PageGrid()
         {
             InitializeComponent();
-
             this.grid.Items.Clear();
-
-            
-
 
             using (var dbcontext = new TaxiContext())
                 this._orders = dbcontext.Orders.ToList();
             
-
-
             this.grid.ItemsSource = _orders;
-
-
-
         }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             ResetHeaders();
-        }
-
-        private void DeleteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
-        {
-            using (var dbcontext = new TaxiContext())
+            
+            for(int i = 6; i <  grid.Columns.Count; i++) 
             {
-                dbcontext.Orders.Remove((Order)this.grid.CurrentCell.Item);
-                dbcontext.SaveChanges();
+                grid.Columns[i].Header = "";
             }
+                
         }
 
         private void ResetHeaders(){
-            for (int i = 0; i < this.grid.Columns.Count(); i++){
+            for (int i = 0; i < headers.Count(); i++){
                 this.grid.Columns[i].Header = headers[i];
             }
         }
@@ -88,7 +76,7 @@ namespace WPF_App_Lab1_test1
             using (var dbcontext = new TaxiContext())
             { 
                 dbcontext.Orders.Add((Order)this.grid.CurrentCell.Item);
-                dbcontext.SaveChanges();
+                
             }
         }
 
@@ -104,7 +92,26 @@ namespace WPF_App_Lab1_test1
 
         private void SaveCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
         {
+            using (var dbcontext = new TaxiContext())
+            {
+                dbcontext.Orders.ToList();
+                var a = 5;
+                dbcontext.SaveChanges();
+            }
+        }
 
+        private void DeleteCommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            using (var dbcontext = new TaxiContext())
+            {
+                dbcontext.Orders.Remove((Order)this.grid.CurrentItem);
+                //dbcontext.SaveChanges();
+            }
         }
     }
 }
