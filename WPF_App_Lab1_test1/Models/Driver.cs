@@ -11,9 +11,7 @@ public partial class Driver
 
     public string? Surname { get; set; }
 
-    public string? PhoneDriver { get; set; }
-
-    public string? Rating { get; set; }
+    public int? Rating { get; set; }
 
     public int? IdCar { get; set; }
 

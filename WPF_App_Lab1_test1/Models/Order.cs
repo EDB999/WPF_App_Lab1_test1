@@ -13,11 +13,11 @@ public partial class Order
 
     public string? Date { get; set; }
 
-    public int? IdClient { get; set; }
+    public int IdClient { get; set; }
 
-    public int? IdDriver { get; set; }
+    public int IdDriver { get; set; }
 
-    public virtual Client? IdClientNavigation { get; set; }
+    public virtual Client IdClientNavigation { get; set; } = null!;
 
-    public virtual Driver? IdDriverNavigation { get; set; }
+    public virtual Driver IdDriverNavigation { get; set; } = null!;
 }

@@ -31,26 +31,26 @@ public partial class TaxiContext : DbContext
     {
         modelBuilder.Entity<Car>(entity =>
         {
-            entity.HasKey(e => e.IdCar).HasName("Cars_pkey");
+            entity.HasKey(e => e.IdCar).HasName("cars_pkey");
 
-            entity.Property(e => e.IdCar)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("id_car");
+            entity.ToTable("cars");
+
+            entity.Property(e => e.IdCar).HasColumnName("id_car");
             entity.Property(e => e.Model)
-                .HasColumnType("character varying")
+                .HasMaxLength(250)
                 .HasColumnName("model");
             entity.Property(e => e.Number)
-                .HasColumnType("character varying")
+                .HasMaxLength(20)
                 .HasColumnName("number");
         });
 
         modelBuilder.Entity<Client>(entity =>
         {
-            entity.HasKey(e => e.IdClient).HasName("Clients_pkey");
+            entity.HasKey(e => e.IdClient).HasName("clients_pkey");
 
-            entity.Property(e => e.IdClient)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("id_client");
+            entity.ToTable("clients");
+
+            entity.Property(e => e.IdClient).HasColumnName("id_client");
             entity.Property(e => e.Name)
                 .HasColumnType("character varying")
                 .HasColumnName("name");
@@ -67,37 +67,32 @@ public partial class TaxiContext : DbContext
 
         modelBuilder.Entity<Driver>(entity =>
         {
-            entity.HasKey(e => e.IdDriver).HasName("Drivers_pkey");
+            entity.HasKey(e => e.IdDriver).HasName("drivers_pkey");
 
-            entity.Property(e => e.IdDriver)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("Id_driver");
+            entity.ToTable("drivers");
+
+            entity.Property(e => e.IdDriver).HasColumnName("id_driver");
             entity.Property(e => e.IdCar).HasColumnName("id_car");
             entity.Property(e => e.Name)
                 .HasColumnType("character varying")
                 .HasColumnName("name");
-            entity.Property(e => e.PhoneDriver)
-                .HasColumnType("character varying")
-                .HasColumnName("phone_driver");
-            entity.Property(e => e.Rating)
-                .HasColumnType("character varying")
-                .HasColumnName("rating");
+            entity.Property(e => e.Rating).HasColumnName("rating");
             entity.Property(e => e.Surname)
                 .HasColumnType("character varying")
                 .HasColumnName("surname");
 
             entity.HasOne(d => d.IdCarNavigation).WithMany(p => p.Drivers)
                 .HasForeignKey(d => d.IdCar)
-                .HasConstraintName("fkey_car");
+                .HasConstraintName("drivers_id_car_fkey");
         });
 
         modelBuilder.Entity<Order>(entity =>
         {
-            entity.HasKey(e => e.IdOrder).HasName("Orders_pkey");
+            entity.HasKey(e => e.IdOrder).HasName("orders_pkey");
 
-            entity.Property(e => e.IdOrder)
-                .ValueGeneratedNever()
-                .HasColumnName("id_order");
+            entity.ToTable("orders");
+
+            entity.Property(e => e.IdOrder).HasColumnName("id_order");
             entity.Property(e => e.Date)
                 .HasColumnType("character varying")
                 .HasColumnName("date");
@@ -112,11 +107,13 @@ public partial class TaxiContext : DbContext
 
             entity.HasOne(d => d.IdClientNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.IdClient)
-                .HasConstraintName("fkey_client");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("orders_id_client_fkey");
 
             entity.HasOne(d => d.IdDriverNavigation).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.IdDriver)
-                .HasConstraintName("fkey_driver");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("orders_id_driver_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);
